@@ -137,9 +137,7 @@ class Headset(object):
                     if s.read() == SYNC and s.read() == SYNC:
                         # Packet found, determine plength
                         while True:
-                            #plength = ord(s.read())
                             plength = int.from_bytes(s.read(), byteorder='big')
-                            # print('Plength: {}'.format(plength))
                             if plength != 170:
                                 break
                         if plength > 170:
@@ -149,14 +147,11 @@ class Headset(object):
                         payload = s.read(plength)
 
                         # Verify its checksum
-                        #val = sum(ord(b) for b in payload[:-1])
                         val = sum(b for b in payload[:-1])
                         val &= 0xff
                         val = ~val & 0xff
-                        #chksum = ord(s.read())
                         chksum = int.from_bytes(s.read(), byteorder='big')
 
-                        # print('Val: {} Checksum: {}'.format(val,chksum))
                         # if val == chksum:
                         if True:  # ignore bad checksums
                             self.parse_payload(payload)
@@ -175,11 +170,8 @@ class Headset(object):
                 # Parse data row
                 excode = 0
                 try:
-                    # print('Payload before chop: {}'.format(payload))
                     code, payload = payload[0], payload[1:]
-                    # print('Code, payload: {}:{}'.format(code, payload))
                     code_char = struct.pack('B',code)
-                    # print('Code_char= {}'.format(code_char))
                     self.headset.count = self.counter
                     self.counter = self.counter + 1
                     if (self.counter >= 100):
@@ -194,9 +186,7 @@ class Headset(object):
                         code, payload = payload[0], payload[1:]
                     except IndexError:
                         pass
-                # if ord(code) < 0x80:
                 if code < 0x80:
-                    # print('Single-byte code {} {}'.format(code, chr(code)))
                     # This is a single-byte code
                     try:
                         value, payload = payload[0], payload[1:]
@@ -205,7 +195,6 @@ class Headset(object):
                     if code_char == POOR_SIGNAL:
                         # Poor signal
                         old_poor_signal = self.headset.poor_signal
-                        #self.headset.poor_signal = ord(value)
                         self.headset.poor_signal = value
                         if self.headset.poor_signal > 0:
                             if old_poor_signal == 0:
@@ -220,41 +209,29 @@ class Headset(object):
                                     handler(self.headset,
                                             self.headset.poor_signal)
                     elif code_char == ATTENTION:
-                        # print('Attention')
                         # Attention level
-                        #self.headset.attention = ord(value)
                         self.headset.attention = value
                         for handler in self.headset.attention_handlers:
                             handler(self.headset, self.headset.attention)
                     elif code_char == MEDITATION:
-                        # print('Meditation')
                         # Meditation level
-                        #self.headset.meditation = ord(value)
                         self.headset.meditation = value
                         for handler in self.headset.meditation_handlers:
                             handler(self.headset, self.headset.meditation)
                     elif code_char == BLINK:
-                        # print('Blink')
                         # Blink strength
-                        # self.headset.blink = ord(value)
                         self.headset.blink = value
                         for handler in self.headset.blink_handlers:
                             handler(self.headset, self.headset.blink)
                 else:
-                    # print('Multibytecode {} {}'.format(code, chr(code)))
                     # This is a multi-byte code
                     try:
-                        #vlength, payload = ord(payload[0]), payload[1:]
                         vlength, payload = payload[0], payload[1:]
                     except IndexError:
                         continue
                     value, payload = payload[:vlength], payload[vlength:]
 
-                    # FIX: accessing value crashes elseway
-                    # print("Checking against {}:{}".format(code, RAW_VALUE))
                     if code_char == RAW_VALUE and len(value) >= 2:
-                        # print('Raw value, length >= 2')
-                        #raw = ord(value[0])*256+ord(value[1])
                         raw = value[0]*256+value[1]
                         if (raw >= 32768):
                             raw = raw-65536
@@ -262,7 +239,6 @@ class Headset(object):
                         for handler in self.headset.raw_value_handlers:
                             handler(self.headset, self.headset.raw_value)
                     if code_char == HEADSET_CONNECTED:
-                        # print('Headset connected')
                         # Headset connect success
                         run_handlers = self.headset.status != STATUS_CONNECTED
                         self.headset.status = STATUS_CONNECTED
@@ -272,7 +248,6 @@ class Headset(object):
                                     self.headset.headset_connected_handlers:
                                 handler(self.headset)
                     elif code_char == HEADSET_NOT_FOUND:
-                        # print('Headset not found')
                         # Headset not found
                         if vlength > 0:
                             not_found_id = value.encode('hex')
@@ -284,22 +259,18 @@ class Headset(object):
                                     self.headset.headset_notfound_handlers:
                                 handler(self.headset, None)
                     elif code_char == HEADSET_DISCONNECTED:
-                        # print('Headset disconnected')
                         # Headset disconnected
                         headset_id = value.encode('hex')
                         for handler in \
                                 self.headset.headset_disconnected_handlers:
                             handler(self.headset, headset_id)
                     elif code_char == REQUEST_DENIED:
-                        # print('Request denied')
                         # Request denied
                         for handler in self.headset.request_denied_handlers:
                             handler(self.headset)
                     elif code_char == STANDBY_SCAN:
-                        # print('Standby scan')
                         # Standby/Scan mode
                         try:
-                            #byte = ord(value[0])
                             byte = value[0]
                         except IndexError:
                             byte = None
@@ -318,10 +289,8 @@ class Headset(object):
                                 for handler in self.headset.standby_handlers:
                                     handler(self.headset)
                     elif code_char == ASIC_EEG_POWER:
-                        # print('EEG Power')
                         j = 0
                         for i in ['delta', 'theta', 'low-alpha', 'high-alpha', 'low-beta', 'high-beta', 'low-gamma', 'mid-gamma']:
-                            #self.headset.waves[i] = ord(value[j])*255*255+ord(value[j+1])*255+ord(value[j+2])
                             self.headset.waves[i] = value[j]*255*255+value[j+1]*255+value[j+2]
                             j += 3
                         for handler in self.headset.waves_handlers:
