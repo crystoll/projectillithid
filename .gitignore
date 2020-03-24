@@ -1,0 +1,12 @@
+
+# Python temp crapsters
+__pycache__/
+.ipynb_checkpoints/ 
+
+# Produced data files and any images
+*.dat
+*.png
+
+
+# OSX Stuff
+.DS_Store
