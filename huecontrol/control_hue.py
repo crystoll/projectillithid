@@ -4,9 +4,12 @@ from phue import Bridge
 
 
 
-PARAM_STATE='on'
+PARAM_TURNEDON='on'
 PARAM_BRIGHTNESS='bri'
 PARAM_NAME='name'
+PARAM_HUE='hue'
+PARAM_SATURATION='sat'
+PARAM_STATE='state'
 
 bridge_ip_address = '192.168.0.2'
 lamp_name='Cornerlight'
@@ -23,14 +26,29 @@ def get_light_names(api):
     lamp_names = [value['name'] for key, value in lights_info.items()]
     return lamp_names
 
+def increase_intensity(b,lamp_name):
+    light = b.get_light(lamp_name)
+    bri = light[PARAM_STATE][PARAM_BRIGHTNESS] # 0 to 254
+    hue = light[PARAM_STATE][PARAM_HUE] # 0 to 65535
+    sat = light[PARAM_STATE][PARAM_SATURATION] # 0 to 254
+    if bri < 244:
+        bri += 10
+        b.set_light(lamp_name, PARAM_BRIGHTNESS,bri)
+    if sat < 244:
+        sat += 10
+        b.set_light(lamp_name, PARAM_SATURATION,sat)
+#    if hue < 40000:
+#        hue += 100
+#        b.set_light(lamp_name, PARAM_HUE, hue)
 
-b = Bridge(bridge_ip_address)
+
+bridge = Bridge(bridge_ip_address)
 
 # If the app is not registered and the button is not pressed, press the button and call connect() (this only needs to be run a single time)
 # b.connect()
 
 # Get the bridge state (This returns the full dictionary that you can explore)
-api = b.get_api()
+api = bridge.get_api()
 
 # Get light names and ids from API if necessary
 #light_ids = get_light_ids(api)
@@ -38,7 +56,15 @@ api = b.get_api()
 #print(light_ids)
 #print(light_names)
 
-b.set_light(lamp_name, PARAM_STATE, True)
+bridge.set_light(lamp_name, PARAM_TURNEDON, True)
+bridge.set_light(lamp_name, PARAM_HUE, 65535)
+bridge.set_light(lamp_name, PARAM_SATURATION, 0)
+bridge.set_light(lamp_name, PARAM_BRIGHTNESS, 0)
+
 #b.set_light(lamp_name, PARAM_BRIGHTNESS,0) # 0 to 254
-command =  {'transitiontime' : 100, 'on' : True, 'bri' : 0}
-b.set_light(lamp_name, command)
+#command =  {'transitiontime' : 100, 'on' : True, 'bri' : 0}
+#bridge.set_light(lamp_name, command)
+
+while True:
+    increase_intensity(bridge, lamp_name)
+    time.sleep(1)
