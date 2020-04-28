@@ -10,6 +10,7 @@ PARAM_NAME='name'
 PARAM_HUE='hue'
 PARAM_SATURATION='sat'
 PARAM_STATE='state'
+PARAM_EFFECT='effect'
 
 bridge_ip_address = '192.168.0.2'
 lamp_name='Cornerlight'
@@ -34,9 +35,13 @@ def increase_intensity(b,lamp_name):
     if bri < 244:
         bri += 10
         b.set_light(lamp_name, PARAM_BRIGHTNESS,bri)
+    else:
+        b.set_light(lamp_name, PARAM_BRIGHTNESS,0, transitiontime=0.5)
+        b.set_light(lamp_name, PARAM_BRIGHTNESS, 254, transitiontime=0.5)
     if sat < 244:
         sat += 10
         b.set_light(lamp_name, PARAM_SATURATION,sat)
+
 #    if hue < 40000:
 #        hue += 100
 #        b.set_light(lamp_name, PARAM_HUE, hue)
@@ -60,6 +65,8 @@ bridge.set_light(lamp_name, PARAM_TURNEDON, True)
 bridge.set_light(lamp_name, PARAM_HUE, 65535)
 bridge.set_light(lamp_name, PARAM_SATURATION, 0)
 bridge.set_light(lamp_name, PARAM_BRIGHTNESS, 0)
+bridge.set_light(lamp_name, PARAM_EFFECT, 'none') # colorloop or none supported
+
 
 #b.set_light(lamp_name, PARAM_BRIGHTNESS,0) # 0 to 254
 #command =  {'transitiontime' : 100, 'on' : True, 'bri' : 0}

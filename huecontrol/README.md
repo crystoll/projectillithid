@@ -65,5 +65,6 @@ Method	POST
 
 You will get back a registered new username/id string, that you can use to debug further
 
+http://www.burgestrand.se/hue-api/
 
 
