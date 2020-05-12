@@ -15,9 +15,9 @@ To install dependencies:
 pip install -r requirements.txt
 ````
 
-To run the app:
+To run the app (from main folder one above this one):
 
-python control_hue.py
+python -m huecontrol
 
 To stop the session:
 
