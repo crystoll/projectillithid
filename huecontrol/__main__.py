@@ -25,12 +25,12 @@ print("Init successful, starting the Illithid loop")
 
 while True:
     print (f'Attention: {headset.attention}')
-    if headset.attention > 60:
+    if headset.attention > 50:
         print("Attentive, aren't you? Let's up the colors!")
         increase_intensity(bridge, lamp_name)
     else: 
         print("No attention, decreasing the intensity")
         decrease_intensity(bridge, lamp_name)
-    time.sleep(2)
+    time.sleep(.2)
 
 

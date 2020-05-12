@@ -9,13 +9,10 @@ For this to work, you need to have suitable libraries installed (pyserial), and 
 
 Very simple. You need Python 3, and Mindwave Mobile. You also need to be prepared to sort out some bluetooth related stuff, for example bluetooth connectivity may require various libs and dependencies depending on which OS(+version) you are running, connection to device is done differently on MacOS and Win, etc. It's a hot steaming mess. But others have managed to do it, so help yourself and see if you can make it run.
 
-## recorder
+## How is this structured?
 
-Recorder is a simple Python script that is interactive. It will ask you some details for filename, and then sample your brain every .5 seconds until 10 minutes recording has been done. Resulting .dat files may then be analyzed using  ..
+We have two subfolders, mindreader, and huecontrol. 
 
-There's also test.py for simpler testing that everything works. mindwave.py is the actual library fork.
+mindreader contains simple code to connect to mindwave device, and read eeg values. There is also tool to record said data, as well as some python notebooks to analyze data or visualize real-time.
 
-## ProjectIllithid
-
-There's a sample Jupyter notebook that runs on Python 3 and contains some experiments on visualizing your brain internals. Feel free to use it as a starting place.
-
+huecontrol combines this with Philips Hue lightbulb control code, by focusing your thoughts you can effect the light intensity.

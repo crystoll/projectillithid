@@ -2,8 +2,6 @@
 import time
 from phue import Bridge
 
-
-
 PARAM_TURNEDON='on'
 PARAM_BRIGHTNESS='bri'
 PARAM_NAME='name'
@@ -12,8 +10,15 @@ PARAM_SATURATION='sat'
 PARAM_STATE='state'
 PARAM_EFFECT='effect'
 
-bridge_ip_address = '192.168.0.2'
-lamp_name='Cornerlight'
+class HueController(object):
+    """
+    Hue controller
+    """
+
+    def __init__(self, ip_address, lamp_name, *args, **kwargs):
+        self.intensity = 0
+
+
 
 
 def get_light_ids(api):

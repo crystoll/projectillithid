@@ -2,6 +2,10 @@
 # Python temp crapsters
 __pycache__/
 .ipynb_checkpoints/ 
+*.pyc
+
+# Virtualenv
+venv/
 
 # Produced data files and any images
 *.dat
