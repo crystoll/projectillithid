@@ -31,6 +31,6 @@ while True:
     else: 
         print("No attention, decreasing the intensity")
         decrease_intensity(bridge, lamp_name)
-    time.sleep(.2)
+    time.sleep(.5)
 
 
