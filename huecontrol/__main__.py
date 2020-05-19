@@ -9,13 +9,15 @@ lamp_name='Cornerlight'
 
 print("Initing the Hue bridge and light")
 
-bridge = Bridge(bridge_ip_address)
-api = bridge.get_api()
-bridge.set_light(lamp_name, PARAM_TURNEDON, True)
-bridge.set_light(lamp_name, PARAM_HUE, 65535)
-bridge.set_light(lamp_name, PARAM_SATURATION, 0)
-bridge.set_light(lamp_name, PARAM_BRIGHTNESS, 0)
-bridge.set_light(lamp_name, PARAM_EFFECT, 'none') # colorloop or none supported
+huecontroller = HueController(bridge_ip_address, lamp_name)
+huecontroller.reset()
+# bridge = Bridge(bridge_ip_address)
+# api = bridge.get_api()
+# bridge.set_light(lamp_name, PARAM_TURNEDON, True)
+# bridge.set_light(lamp_name, PARAM_HUE, 65535)
+# bridge.set_light(lamp_name, PARAM_SATURATION, 0)
+# bridge.set_light(lamp_name, PARAM_BRIGHTNESS, 0)
+# bridge.set_light(lamp_name, PARAM_EFFECT, 'none') # colorloop or none supported
 
 print("Initing the mindwave device at /dev/tty.MindWaveMobile-DevA")
 
@@ -28,11 +30,12 @@ while True:
     print (f'Attention: {headset.attention}')
     if headset.attention > 50:
         print("Attentive, aren't you? Let's up the colors!")
-        increase_intensity(bridge, lamp_name)
-        playsound('effect.mp3')
+        huecontroller.increase_intensity()
+        playsound('effect3.mp3')
     else: 
         print("No attention, decreasing the intensity")
-        decrease_intensity(bridge, lamp_name)
-    time.sleep(.5)
+        huecontroller.decrease_intensity()
+    print(f'Current intensity: {huecontroller.intensity}')
+    time.sleep(1)
 
 
