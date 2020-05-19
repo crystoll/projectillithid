@@ -1,4 +1,5 @@
 import time
+from playsound import playsound
 
 from .mindwave.mindwave import Headset
 from .hue.hue import *
@@ -28,6 +29,7 @@ while True:
     if headset.attention > 50:
         print("Attentive, aren't you? Let's up the colors!")
         increase_intensity(bridge, lamp_name)
+        playsound('effect.mp3')
     else: 
         print("No attention, decreasing the intensity")
         decrease_intensity(bridge, lamp_name)
