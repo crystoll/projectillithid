@@ -31,11 +31,13 @@ while True:
     if headset.attention > 50:
         print("Attentive, aren't you? Let's up the colors!")
         huecontroller.increase_intensity()
-        playsound('effect3.mp3')
-    else: 
-        print("No attention, decreasing the intensity")
-        huecontroller.decrease_intensity()
+        if huecontroller.intensity > 50:
+            playsound('effect3.mp3')
+    # else: 
+        # print("No attention, decreasing the intensity")
+        # huecontroller.decrease_intensity()
     print(f'Current intensity: {huecontroller.intensity}')
+
     time.sleep(1)
 
 

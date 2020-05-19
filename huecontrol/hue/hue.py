@@ -43,37 +43,25 @@ class HueController(object):
         lamp_names = [value['name'] for key, value in lights_info.items()]
         return lamp_names
 
-    def increase_intensity(self):
-        if self.intensity < 100:
-            self.intensity = self.intensity + 1
-        light = self.bridge.get_light(self.lamp_name)
-        bri = light[PARAM_STATE][PARAM_BRIGHTNESS] # 0 to 254
-        hue = light[PARAM_STATE][PARAM_HUE] # 0 to 65535
-        sat = light[PARAM_STATE][PARAM_SATURATION] # 0 to 254
-        if bri < 244:
-            bri += 10
-            self.bridge.set_light(self.lamp_name, PARAM_BRIGHTNESS,bri)
-        else:
+    def update_state(self):
+        print(f'Using intensity {self.intensity} and value {round(254/100*self.intensity)}')
+        self.bridge.set_light(self.lamp_name, PARAM_SATURATION, round(254/100*self.intensity))
+        if (self.intensity == 100):
             self.bridge.set_light(self.lamp_name, PARAM_BRIGHTNESS,0, transitiontime=0.5)
             self.bridge.set_light(self.lamp_name, PARAM_BRIGHTNESS, 254, transitiontime=0.5)
-        if sat < 244:
-            sat += 10
-            self.bridge.set_light(self.lamp_name, PARAM_SATURATION,sat)
+        else:
+            self.bridge.set_light(self.lamp_name, PARAM_BRIGHTNESS,round(254/100*self.intensity)) 
+
+    def increase_intensity(self):
+        if self.intensity < 100:
+            self.intensity = self.intensity + 5
+        self.update_state()
 
 
     def decrease_intensity(self):
         if self.intensity > 1:
-            self.intensity = self.intensity - 1
-        light = self.bridge.get_light(self.lamp_name)
-        bri = light[PARAM_STATE][PARAM_BRIGHTNESS] # 0 to 254
-        hue = light[PARAM_STATE][PARAM_HUE] # 0 to 65535
-        sat = light[PARAM_STATE][PARAM_SATURATION] # 0 to 254
-        if bri > 10:
-            bri -= 10
-            self.bridge.set_light(self.lamp_name, PARAM_BRIGHTNESS,bri)
-        if sat > 10:
-            sat -= 10
-            self.bridge.set_light(self.lamp_name, PARAM_SATURATION,sat)
+            self.intensity = self.intensity - 5
+        self.update_state()
 
 
 
