@@ -5,7 +5,7 @@ from .mindwave.mindwave import Headset
 from .hue.hue import *
 
 bridge_ip_address = '192.168.0.2'
-lamp_name='Cornerlight'
+lamp_name='Effectlamp'
 
 print("Initing the Hue bridge and light")
 
