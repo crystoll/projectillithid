@@ -29,13 +29,8 @@ print("Init successful, starting the Illithid loop")
 while True:
     print (f'Attention: {headset.attention}')
     if headset.attention > 50:
-        print("Attentive, aren't you? Let's up the colors!")
+        print("Attentive, aren't you? Let's up the intensity!")
         huecontroller.increase_intensity()
-        if huecontroller.intensity > 50:
-            playsound('effect3.mp3')
-    # else: 
-        # print("No attention, decreasing the intensity")
-        # huecontroller.decrease_intensity()
     print(f'Current intensity: {huecontroller.intensity}')
 
     time.sleep(1)
