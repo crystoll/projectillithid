@@ -9,15 +9,8 @@ lamp_name='Effectlamp'
 
 print("Initing the Hue bridge and light")
 
-huecontroller = HueController(bridge_ip_address, lamp_name)
+huecontroller = HueController(bridge_ip_address)
 huecontroller.reset()
-# bridge = Bridge(bridge_ip_address)
-# api = bridge.get_api()
-# bridge.set_light(lamp_name, PARAM_TURNEDON, True)
-# bridge.set_light(lamp_name, PARAM_HUE, 65535)
-# bridge.set_light(lamp_name, PARAM_SATURATION, 0)
-# bridge.set_light(lamp_name, PARAM_BRIGHTNESS, 0)
-# bridge.set_light(lamp_name, PARAM_EFFECT, 'none') # colorloop or none supported
 
 print("Initing the mindwave device at /dev/tty.MindWaveMobile-DevA")
 

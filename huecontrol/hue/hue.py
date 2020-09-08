@@ -15,21 +15,20 @@ class HueController(object):
     Hue controller
     """
 
-    def __init__(self, ip_address, lamp_name, *args, **kwargs):
+    def __init__(self, ip_address, *args, **kwargs):
         self.bridge = Bridge(ip_address)
         self.api = self.bridge.get_api()
-        self.lamp_name = lamp_name
         self.intensity = 0
 
     def reset(self):
         """
-        Reset lamp to 0, white, no effect
+        Reset lamps to 0, white, no effect
         """
-        self.bridge.set_light(self.lamp_name, PARAM_TURNEDON, True)
-        self.bridge.set_light(self.lamp_name, PARAM_HUE, 65535)
-        self.bridge.set_light(self.lamp_name, PARAM_SATURATION, 0)
-        self.bridge.set_light(self.lamp_name, PARAM_BRIGHTNESS, 0)
-        self.bridge.set_light(self.lamp_name, PARAM_EFFECT, 'none') # colorloop or none supported
+        self.bridge.set_group(1, PARAM_TURNEDON, True)
+        self.bridge.set_group(1, PARAM_HUE, 65535)
+        self.bridge.set_group(1, PARAM_SATURATION, 0)
+        self.bridge.set_group(1, PARAM_BRIGHTNESS, 0)
+        self.bridge.set_group(1, PARAM_EFFECT, 'none') # colorloop or none supported
 
 
     def get_light_ids(self):
@@ -45,12 +44,12 @@ class HueController(object):
 
     def update_state(self):
         print(f'Using intensity {self.intensity} and value {round(254/100*self.intensity)}')
-        self.bridge.set_light(self.lamp_name, PARAM_SATURATION, round(254/100*self.intensity))
+        self.bridge.set_group(1, PARAM_SATURATION, round(254/100*self.intensity))
         if (self.intensity == 100):
-            self.bridge.set_light(self.lamp_name, PARAM_BRIGHTNESS,0, transitiontime=0.5)
-            self.bridge.set_light(self.lamp_name, PARAM_BRIGHTNESS, 254, transitiontime=0.5)
+            self.bridge.set_group(1, PARAM_BRIGHTNESS,0, transitiontime=0.5)
+            self.bridge.set_group(1, PARAM_BRIGHTNESS, 254, transitiontime=0.5)
         else:
-            self.bridge.set_light(self.lamp_name, PARAM_BRIGHTNESS,round(254/100*self.intensity)) 
+            self.bridge.set_group(1, PARAM_BRIGHTNESS,round(254/100*self.intensity)) 
 
     def increase_intensity(self):
         if self.intensity < 100:
